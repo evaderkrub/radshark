@@ -1,0 +1,22 @@
+/build/
+/out/
+/.vs/
+*.user
+__pycache__/
+/imgui.ini
+/uitest_results*
+
+# Local development configuration
+.claude/
+.codex/
+.idea/
+.vscode/
+.pytest_cache/
+AGENTS.md
+CLAUDE.md
+docs/superpowers/
+*.pyc
+*.pdb
+*.obj
+*.dll
+*.exe
