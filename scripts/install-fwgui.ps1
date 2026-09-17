@@ -3,10 +3,10 @@
 
 param(
     [Parameter(Mandatory=$true)][string]$HostDir,
-    [string]$BuildDir='C:\buildfiles\vspyshark'
+    [string]$BuildDir='C:\buildfiles\radshark'
 )
 $ErrorActionPreference='Stop'
-$sharkPlugin=Join-Path $BuildDir 'plugins\fwgui_vspyshark.dll'
+$sharkPlugin=Join-Path $BuildDir 'plugins\fwgui_radshark.dll'
 if(-not (Test-Path -LiteralPath $sharkPlugin)) { throw 'Build the FreeWili GUI plugin first (-Plugins).' }
 if(-not (Test-Path -LiteralPath $HostDir -PathType Container)) { throw 'HostDir must be an existing host installation directory.' }
 $sharkDestination=Join-Path $HostDir 'plugins'
@@ -18,4 +18,4 @@ if(Test-Path -LiteralPath $sharkDecoder) {
     New-Item -ItemType Directory -Path $sharkRuntimeDestination -Force | Out-Null
     Get-ChildItem -LiteralPath $sharkDecoder | Copy-Item -Destination $sharkRuntimeDestination -Recurse -Force
 }
-Write-Output "Installed VSpy Shark in $HostDir. Restart the host and open Tools > VSpy Shark."
+Write-Output "Installed RadShark in $HostDir. Restart the host and open Tools > RadShark."

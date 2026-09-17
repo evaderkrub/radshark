@@ -4,6 +4,6 @@
 
 set -euo pipefail
 root="$(cd "$(dirname "$0")/.." && pwd)"
-build="${VSPYSHARK_BUILD_DIR:-$HOME/buildfiles/vspyshark}"
+build="${RADSHARK_BUILD_DIR:-$HOME/buildfiles/radshark}"
 cmake -S "$root" -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo "$@"
 cmake --build "$build"

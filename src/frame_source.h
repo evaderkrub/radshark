@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-namespace vspyshark {
+namespace radshark {
 
 using wirespy::RawFrame;   // the client library's frame (src/client/pcap_reader.h)
 using wirespy::PcapFile;
@@ -78,4 +78,4 @@ private:
     std::uint64_t dropped_ = 0;
 };
 
-} // namespace vspyshark
+} // namespace radshark

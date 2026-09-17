@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-namespace vspyshark {
+namespace radshark {
 
 class SharkView {
 public:
@@ -123,4 +123,4 @@ private:
     Services host_;
 };
 
-} // namespace vspyshark
+} // namespace radshark

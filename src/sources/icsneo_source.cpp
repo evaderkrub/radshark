@@ -12,15 +12,15 @@
 // own error text is the reason shown.
 #include "sources.h"
 
-#ifdef VSPYSHARK_HAVE_ICSNEO
+#ifdef RADSHARK_HAVE_ICSNEO
 #include <icsneo/icsneocpp.h>
 #include <atomic>
 #include <mutex>
 #endif
 
-namespace vspyshark {
+namespace radshark {
 
-#ifdef VSPYSHARK_HAVE_ICSNEO
+#ifdef RADSHARK_HAVE_ICSNEO
 
 namespace {
 
@@ -169,4 +169,4 @@ std::unique_ptr<FrameSource> OpenIcsneoDevice(const std::string&) { return nullp
 
 #endif
 
-} // namespace vspyshark
+} // namespace radshark

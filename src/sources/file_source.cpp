@@ -5,7 +5,7 @@
 #include "sources.h"
 #include "pcap_reader.h"
 
-namespace vspyshark {
+namespace radshark {
 
 const char* SourceKindName(SourceKind k) {
     switch (k) {
@@ -58,4 +58,4 @@ std::unique_ptr<FrameSource> OpenFileSource(const std::string& path, std::string
     return std::make_unique<FileSource>(path, std::move(f));
 }
 
-} // namespace vspyshark
+} // namespace radshark

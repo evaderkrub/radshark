@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Dave Robins
 
-// doc.h -- the help pages VSpy Shark carries in the binary.
+// doc.h -- the help pages RadShark carries in the binary.
 #pragma once
 
-namespace vspyshark {
+namespace radshark {
 
 static constexpr const char* kDocIndex = R"MD(
-# VSpy Shark
+# RadShark
 
-*VSpy Shark* is a standalone Ethernet analyzer with a plugin for FreeWili GUI.
+*RadShark* is a standalone Ethernet analyzer with a plugin for FreeWili GUI.
 Its shared interface is Wireshark-shaped: the
 same three panes (packet list, packet details, packet bytes), Wireshark's own
 summary columns, colouring rules and display filters.
@@ -69,10 +69,10 @@ defaults; there is no column editor.
 
 ## MCP
 
-`vspyshark_state`, `vspyshark_packets`, `vspyshark_packet`,
-`vspyshark_filter`, `vspyshark_column_filter`, `vspyshark_open`,
-`vspyshark_save`, `vspyshark_sources`, and
-`vspyshark_capture` (which starts only the corelib / libx watchers; an
+`radshark_state`, `radshark_packets`, `radshark_packet`,
+`radshark_filter`, `radshark_column_filter`, `radshark_open`,
+`radshark_save`, `radshark_sources`, and
+`radshark_capture` (which starts only the corelib / libx watchers; an
 interface or a device is opened from the view, by the user).
 )MD";
 
@@ -97,4 +97,4 @@ Right-click a field in the details pane for *Apply as Filter > Selected* to
 build one from what is under the mouse.
 )MD";
 
-} // namespace vspyshark
+} // namespace radshark

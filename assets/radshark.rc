@@ -2,4 +2,4 @@
 // Copyright (c) 2026 Dave Robins
 
 // Keep this first: SDL uses the executable's first icon for the window class.
-1 ICON "vspyshark.ico"
+1 ICON "radshark.ico"

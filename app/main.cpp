@@ -31,20 +31,20 @@ int main(int argc,char** argv) {
         else if(arg=="--frames" && i+1<argc) frames=std::stoi(argv[++i]);
         else if(arg=="--width" && i+1<argc) width=std::stoi(argv[++i]);
         else if(arg=="--height" && i+1<argc) height=std::stoi(argv[++i]);
-        else { std::cerr<<"Usage: vspyshark [--open capture.pcap] [--list-sources] [--test] [--screenshot path.png --frames N] [--width N --height N]\n";return 2; }
+        else { std::cerr<<"Usage: radshark [--open capture.pcap] [--list-sources] [--test] [--screenshot path.png --frames N] [--width N --height N]\n";return 2; }
     }
     if(list) {
-        auto sources=vspyshark::ListLocalInterfaces();auto devices=vspyshark::ListIcsneoDevices(true);
+        auto sources=radshark::ListLocalInterfaces();auto devices=radshark::ListIcsneoDevices(true);
         sources.insert(sources.end(),devices.begin(),devices.end());
         auto rows=nlohmann::json::array();
-        for(const auto& s:sources) rows.push_back({{"kind",vspyshark::SourceKindName(s.kind)},{"id",s.id},{"name",s.name},{"available",s.available},{"reason",s.reason}});
-        std::cout<<nlohmann::json{{"pcap",vspyshark::LocalCaptureAvailable()},{"libicsneo",vspyshark::IcsneoAvailable()},{"sources",rows}}.dump(2)<<'\n';return 0;
+        for(const auto& s:sources) rows.push_back({{"kind",radshark::SourceKindName(s.kind)},{"id",s.id},{"name",s.name},{"available",s.available},{"reason",s.reason}});
+        std::cout<<nlohmann::json{{"pcap",radshark::LocalCaptureAvailable()},{"libicsneo",radshark::IcsneoAvailable()},{"sources",rows}}.dump(2)<<'\n';return 0;
     }
 #ifndef IMGUI_ENABLE_TEST_ENGINE
-    if(test) { std::cerr<<"Rebuild with VSPYSHARK_TEST_ENGINE=ON to run UI tests\n";return 2; }
+    if(test) { std::cerr<<"Rebuild with RADSHARK_TEST_ENGINE=ON to run UI tests\n";return 2; }
 #endif
     if(!SDL_Init(SDL_INIT_VIDEO)) {std::cerr<<SDL_GetError();return 1;}
-    SDL_Window* window=SDL_CreateWindow("VSpy Shark",width,height,SDL_WINDOW_RESIZABLE|SDL_WINDOW_HIGH_PIXEL_DENSITY);
+    SDL_Window* window=SDL_CreateWindow("RadShark",width,height,SDL_WINDOW_RESIZABLE|SDL_WINDOW_HIGH_PIXEL_DENSITY);
     SDL_Renderer* renderer=window?SDL_CreateRenderer(window,nullptr):nullptr;
     if(!renderer) {std::cerr<<SDL_GetError();SDL_Quit();return 1;}
     SDL_SetRenderVSync(renderer,1);
@@ -62,7 +62,7 @@ int main(int argc,char** argv) {
     if(!mono) mono=regular;if(!bold) bold=regular;
     io.FontDefault=regular;
     const bool persist=!test && frames==0;
-    char* pref=SDL_GetPrefPath("IntrepidCS","VSpyShark");
+    char* pref=SDL_GetPrefPath("IntrepidCS","RadShark");
     const fs::path prefdir=pref?fs::u8path(pref):fs::current_path();SDL_free(pref);
     const std::string ini=(prefdir/"imgui.ini").string();io.IniFilename=persist?ini.c_str():nullptr;
     std::map<std::string,std::string> settings;
@@ -70,14 +70,14 @@ int main(int argc,char** argv) {
     ImGui_ImplSDL3_InitForSDLRenderer(window,renderer);ImGui_ImplSDLRenderer3_Init(renderer);
     int result=0;
     {
-        vspyshark::PortableUi ui;
-        vspyshark::Services services;ui.Bind(services);
+        radshark::PortableUi ui;
+        radshark::Services services;ui.Bind(services);
         services.settings_get=[&](const char* k)->std::string_view {auto it=settings.find(k);return it==settings.end()?std::string_view():it->second;};
         services.settings_set=[&](const char* k,const char* v){settings[k]=v;};
         services.log=[](int,const std::string& s){std::cerr<<s<<'\n';};
-        services.push_font=[&](vspyshark::Font f){ImGui::PushFont(f==vspyshark::Font::Mono?mono:bold);};
+        services.push_font=[&](radshark::Font f){ImGui::PushFont(f==radshark::Font::Mono?mono:bold);};
         services.pop_font=[](){ImGui::PopFont();};
-        vspyshark::Analyzer analyzer;analyzer.Init(services);
+        radshark::Analyzer analyzer;analyzer.Init(services);
 #ifdef IMGUI_ENABLE_TEST_ENGINE
         auto* engine=ImGuiTestEngine_CreateContext();auto& testio=ImGuiTestEngine_GetIO(engine);
         testio.ConfigLogToTTY=true;testio.ConfigRunSpeed=ImGuiTestRunSpeed_Fast;
@@ -102,7 +102,7 @@ int main(int argc,char** argv) {
             analyzer.Frame();
             ImGui_ImplSDLRenderer3_NewFrame();ImGui_ImplSDL3_NewFrame();ImGui::NewFrame();
             ImGui::SetNextWindowPos(ImVec2(0,0));ImGui::SetNextWindowSize(io.DisplaySize);
-            ImGui::Begin("VSpy Shark###SharkMain",nullptr,ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoCollapse|ImGuiWindowFlags_NoScrollbar|ImGuiWindowFlags_MenuBar);
+            ImGui::Begin("RadShark###SharkMain",nullptr,ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoCollapse|ImGuiWindowFlags_NoScrollbar|ImGuiWindowFlags_MenuBar);
             analyzer.Draw();ui.Draw();ImGui::End();
             if(!open.empty()) {std::string error;if(!analyzer.View().OpenFile(services,open,error)){std::cerr<<error<<'\n';result=1;}open.clear();}
             ImGui::Render();SDL_SetRenderDrawColor(renderer,245,245,245,255);SDL_RenderClear(renderer);

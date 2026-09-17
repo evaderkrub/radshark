@@ -1,15 +1,15 @@
 # Architecture
 
-VSpy Shark is a standalone packet analyzer with a FreeWili GUI plugin. Both
+RadShark is a standalone packet analyzer with a FreeWili GUI plugin. Both
 compile the same packet model and UI. The standalone application does not
 require a host SDK or a host engine.
 
 ## Repository boundary
 
-- **vspyshark:** application shell, capture backends, packet model, analyzer UI,
+- **radshark:** application shell, capture backends, packet model, analyzer UI,
   the public plugin adapter and UI tests.
 - **wirespy:** decoder server, wire protocol, C++ client and capture-file I/O.
-  VSpy Shark consumes the client through `VSPYSHARK_WIRESPY_DIR`; decoding happens
+  RadShark consumes the client through `RADSHARK_WIRESPY_DIR`; decoding happens
   in a separate `wirespy_server` process. No decoder libraries enter the GUI binary.
 
 ## Layers
@@ -35,8 +35,8 @@ queue raw frames. The decoder worker sees immutable frame copies and returns
 results through a queue. Stop, shutdown and plugin unload join workers before
 their code or callbacks disappear.
 
-The public FreeWili adapter uses plugin id `com.intrepidcs.vspyshark`, view id
-`shark` and `vspyshark_*` MCP tools. Install one adapter per host to avoid two
+The public FreeWili adapter uses plugin id `com.intrepidcs.radshark`, view id
+`shark` and `radshark_*` MCP tools. Install one adapter per host to avoid two
 analyzer windows. The public FreeWili GUI SDK remains a separate repository.
 
 Plugin binaries must match the host's architecture, MSVC runtime, compiler and

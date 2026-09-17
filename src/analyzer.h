@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <cctype>
 #include <cstdlib>
-namespace vspyshark {
+namespace radshark {
 struct Reply {
     std::function<void(const std::string&)> ok, error;
     void Ok(const std::string& value) const { ok(value); }
@@ -38,7 +38,7 @@ public:
     SharkView& View() { return view_; }
     const Services& Host() const { return services_; }
     void StateTool(std::string_view, const Reply& reply) {
-        vspyshark::Capture& cap = view_.capture();
+        radshark::Capture& cap = view_.capture();
         nlohmann::json j = {
             {"capturing", view_.Capturing()},
             {"source", view_.SourceName()},
@@ -64,14 +64,14 @@ public:
         const int first = (int)a.Int("first", 0);
         const int count = std::min<int>(500, std::max<int>(1, (int)a.Int("count", 100)));
         const bool all = a.Bool("all", false);
-        vspyshark::Capture& cap = view_.capture();
+        radshark::Capture& cap = view_.capture();
         nlohmann::json rows = nlohmann::json::array();
         const std::size_t total = all ? cap.Count() : cap.Displayed().size();
         for (int r = first; r < first + count && r >= 0 && (std::size_t)r < total; ++r) {
             const std::uint32_t idx = all ? (std::uint32_t)r : cap.Displayed()[(std::size_t)r];
-            const vspyshark::Packet& p = cap.At(idx);
+            const radshark::Packet& p = cap.At(idx);
             nlohmann::json row = {{"index", idx}, {"number", idx + 1}, {"columns", p.cols}, {"match", p.match},
-                                  {"state", p.state == vspyshark::Packet::State::Decoded ? "decoded" : p.state == vspyshark::Packet::State::Failed ? "failed" : "queued"},
+                                  {"state", p.state == radshark::Packet::State::Decoded ? "decoded" : p.state == radshark::Packet::State::Failed ? "failed" : "queued"},
                                   {"length", p.raw->bytes.size()}, {"interface", p.raw->iface}, {"transmitted", p.raw->transmitted}};
             if (p.has_color) row["color"] = {{"fg", p.fg}, {"bg", p.bg}};
             if (!p.error.empty()) row["error"] = p.error;
@@ -83,21 +83,21 @@ public:
     void PacketTool(std::string_view args, const Reply& reply) {
         Args a(args);
         const std::int64_t number = a.Int("number", 0);
-        vspyshark::Capture& cap = view_.capture();
+        radshark::Capture& cap = view_.capture();
         if (number < 1 || (std::size_t)number > cap.Count()) { reply.Error("no such packet"); return; }
         const std::uint32_t idx = (std::uint32_t)(number - 1);
         if (a.Bool("select", false)) view_.Select(idx);
         // The tree is fetched asynchronously: request it, and answer with what
         // is there. A second call a moment later has the tree.
         cap.RequestTree(idx);
-        const vspyshark::Packet& p = cap.At(idx);
+        const radshark::Packet& p = cap.At(idx);
         std::string hex;
         hex.reserve(p.raw->bytes.size() * 2);
         static const char* kHex = "0123456789abcdef";
         for (std::uint8_t b : p.raw->bytes) { hex += kHex[b >> 4]; hex += kHex[b & 15]; }
         nlohmann::json j = {{"number", number}, {"columns", p.cols}, {"bytes", hex}, {"interface", p.raw->iface},
                             {"ts_sec", p.raw->ts_sec}, {"ts_nsec", p.raw->ts_nsec}};
-        if (const vspyshark::DetailNode* t = cap.Tree(idx)) j["tree"] = TreeJson(*t);
+        if (const radshark::DetailNode* t = cap.Tree(idx)) j["tree"] = TreeJson(*t);
         else j["tree_pending"] = true;
         reply.Ok(j.dump());
     }
@@ -110,7 +110,7 @@ public:
 
     void ColumnFilterTool(std::string_view args, const Reply& reply) {
         Args a(args);
-        vspyshark::Capture& cap = view_.capture();
+        radshark::Capture& cap = view_.capture();
         if (a.Has("enabled")) { const bool on = a.Bool("enabled", true); cap.SetColumnFiltersEnabled(on); view_.ShowColumnFilters(on); }
         if (a.Has("column")) {
             const std::string col = a.String("column", "");
@@ -145,9 +145,9 @@ public:
         if (action == "stop") { view_.StopCapture(); reply.Ok(R"({"ok":true})"); return; }
         if (action != "start") { reply.Error("action must be start or stop"); return; }
         const std::string source = a.String("source", "corelib");
-        vspyshark::SourceKind kind;
-        if (source == "corelib") kind = vspyshark::SourceKind::Corelib;
-        else if (source == "libx") kind = vspyshark::SourceKind::Libx;
+        radshark::SourceKind kind;
+        if (source == "corelib") kind = radshark::SourceKind::Corelib;
+        else if (source == "libx") kind = radshark::SourceKind::Libx;
         else { reply.Error("refused: \"" + source + "\" opens hardware; start it from the view"); return; }
         std::string err;
         if (!view_.StartCapture(services_, kind, source, err)) { reply.Error(err); return; }
@@ -156,20 +156,20 @@ public:
 
     void SourcesTool(std::string_view, const Reply& reply) {
         nlohmann::json arr = nlohmann::json::array();
-        for (const vspyshark::SourceEntry& e : view_.AllSources(services_, false)) {
-            arr.push_back({{"kind", vspyshark::SourceKindName(e.kind)}, {"id", e.id}, {"name", e.name},
+        for (const radshark::SourceEntry& e : view_.AllSources(services_, false)) {
+            arr.push_back({{"kind", radshark::SourceKindName(e.kind)}, {"id", e.id}, {"name", e.name},
                            {"description", e.description}, {"available", e.available}, {"reason", e.reason}});
         }
         reply.Ok(arr.dump());
     }
 
 private:
-    static const char* FilterStateName(vspyshark::Capture::FilterState s) {
+    static const char* FilterStateName(radshark::Capture::FilterState s) {
         switch (s) {
-        case vspyshark::Capture::FilterState::Empty: return "empty";
-        case vspyshark::Capture::FilterState::Pending: return "pending";
-        case vspyshark::Capture::FilterState::Valid: return "valid";
-        case vspyshark::Capture::FilterState::Invalid: return "invalid";
+        case radshark::Capture::FilterState::Empty: return "empty";
+        case radshark::Capture::FilterState::Pending: return "pending";
+        case radshark::Capture::FilterState::Valid: return "valid";
+        case radshark::Capture::FilterState::Invalid: return "invalid";
         }
         return "?";
     }

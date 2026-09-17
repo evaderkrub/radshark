@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <vector>
 namespace fs=std::filesystem;
-namespace vspyshark {
+namespace radshark {
 void PortableUi::Bind(Services& s) {
     s.open_file_dialog=[this](const char*,const char*,int tag,bool save){
         tag_=tag;save_=save;requested_=true;error_.clear();filename_[0]=0;
@@ -73,7 +73,7 @@ void PortableUi::Draw() {
     if(!doc_.empty()) {
         bool open=true;
         ImGui::SetNextWindowSize(ImVec2(640,360),ImGuiCond_FirstUseEver);
-        if(ImGui::Begin("VSpy Shark Help",&open)) {
+        if(ImGui::Begin("RadShark Help",&open)) {
             ImGui::SeparatorText("Capture and inspect");
             ImGui::TextWrapped("Open a pcap or pcapng file, or double-click an Ethernet interface or Intrepid device to start capture. Stop ends capture; selecting a packet shows its protocol details and bytes.");
             ImGui::SeparatorText("Display filters");

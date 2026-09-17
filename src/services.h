@@ -7,7 +7,7 @@
 #include <functional>
 #include <string_view>
 
-namespace vspyshark {
+namespace radshark {
 enum class Icon { NONE, SETTINGS, OPEN, SAVE, CLOSE, REFRESH, SEARCH, LINK,
                   ARROW_UP, ARROW_DOWN, DOWNLOAD, CHART, FILTER, ADD, ARROW_RIGHT };
 enum class Font { Bold = 1, Mono = 3 };
@@ -35,7 +35,7 @@ struct Services {
     void LogInfo(const std::string& s) const { if(log) log(0,s); }
     void LogWarn(const std::string& s) const { if(log) log(1,s); }
     void LogError(const std::string& s) const { if(log) log(2,s); }
-    std::string_view Icon(vspyshark::Icon i) const { return icon ? icon(i) : std::string_view(); }
+    std::string_view Icon(radshark::Icon i) const { return icon ? icon(i) : std::string_view(); }
     void PushFont(Font f) const { if(push_font) push_font(f); else ImGui::PushFont(nullptr); }
     void PopFont() const { if(pop_font) pop_font(); else ImGui::PopFont(); }
     void OpenDoc(const char* id) const { if(open_doc) open_doc(id); }

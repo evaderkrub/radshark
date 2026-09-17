@@ -10,18 +10,18 @@
 #include <thread>
 int main() {
     std::string id;
-    for(const auto& source:vspyshark::ListLocalInterfaces())
+    for(const auto& source:radshark::ListLocalInterfaces())
         if(source.id.find("NPF_Loopback")!=std::string::npos) id=source.id;
     if(id.empty()) {std::cout<<"Npcap loopback is unavailable\n";return 125;}
     WSADATA data{};if(WSAStartup(MAKEWORD(2,2),&data))return 1;
     const SOCKET socketfd=socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
     if(socketfd==INVALID_SOCKET) {WSACleanup();return 1;}
-    auto source=vspyshark::OpenLocalInterface(id,false,"udp and dst port 45178");
+    auto source=radshark::OpenLocalInterface(id,false,"udp and dst port 45178");
     std::string error;
     if(!source->start(error)) {std::cerr<<error;closesocket(socketfd);WSACleanup();return 1;}
     sockaddr_in destination{};destination.sin_family=AF_INET;destination.sin_port=htons(45178);destination.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
-    const std::string payload="VSpy Shark loopback capture verification";
-    std::vector<vspyshark::RawFrame> frames;
+    const std::string payload="RadShark loopback capture verification";
+    std::vector<radshark::RawFrame> frames;
     const auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(5);
     while(frames.empty() && std::chrono::steady_clock::now()<deadline) {
         sendto(socketfd,payload.data(),static_cast<int>(payload.size()),0,reinterpret_cast<const sockaddr*>(&destination),sizeof destination);

@@ -5,7 +5,7 @@
 #include "analyzer.h"
 struct ImGuiTestEngine;
 struct SharkUiTests {
-    vspyshark::Analyzer* analyzer=nullptr;
+    radshark::Analyzer* analyzer=nullptr;
     std::string screenshot;
 };
 void RegisterSharkTests(ImGuiTestEngine*,SharkUiTests&);

@@ -25,7 +25,7 @@
 #include <thread>
 #include <vector>
 
-namespace vspyshark {
+namespace radshark {
 
 using wirespy::DetailNode;
 using wirespy::DecodeAsk;
@@ -175,4 +175,4 @@ private:
     std::string column_titles_json_;
 };
 
-} // namespace vspyshark
+} // namespace radshark

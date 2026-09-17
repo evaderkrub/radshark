@@ -5,7 +5,7 @@
 #include "services.h"
 #include <filesystem>
 #include <map>
-namespace vspyshark {
+namespace radshark {
 // Shared file browser/help for the standalone shell and SDKs without a file picker.
 class PortableUi {
 public:

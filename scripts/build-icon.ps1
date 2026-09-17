@@ -5,7 +5,7 @@ param()
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 $assetDir = Join-Path (Split-Path $PSScriptRoot -Parent) 'assets'
-$source = [Drawing.Image]::FromFile((Join-Path $assetDir 'vspyshark.png'))
+$source = [Drawing.Image]::FromFile((Join-Path $assetDir 'radshark.png'))
 $sizes = @(16, 20, 24, 32, 40, 48, 64, 128, 256)
 $frames = [Collections.Generic.List[byte[]]]::new()
 try {
@@ -30,7 +30,7 @@ try {
 } finally { $source.Dispose() }
 
 # ICO directory followed by alpha-preserving PNG frames (Windows Vista+).
-$output = Join-Path $assetDir 'vspyshark.ico'
+$output = Join-Path $assetDir 'radshark.ico'
 $writer = [IO.BinaryWriter]::new([IO.File]::Create($output))
 try {
     $writer.Write([uint16]0)

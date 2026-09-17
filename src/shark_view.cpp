@@ -21,7 +21,7 @@
 extern void ImGuiTestEngineHook_ItemInfo(ImGuiContext*, ImGuiID, const char*, int);
 #endif
 
-namespace vspyshark {
+namespace radshark {
 
 namespace {
 
@@ -532,7 +532,7 @@ void SharkView::DrawMenuBar(const Services& host) {
     }
     if (ImGui::BeginMenu("Help")) {
         if (ImGui::MenuItem("Contents", "F1")) host.OpenDoc("index");
-        if (ImGui::MenuItem("About VSpy Shark")) show_about_ = true;
+        if (ImGui::MenuItem("About RadShark")) show_about_ = true;
         ImGui::EndMenu();
     }
     ImGui::EndMenuBar();
@@ -692,7 +692,7 @@ void SharkView::DrawWelcome(const Services& host) {
     ImGui::Indent(24.0f * k);
     host.PushFont(Font::Bold);
     ImGui::SetWindowFontScale(zoom_ * 1.6f);
-    TextMarked("###cs_welcome_title", "Welcome to VSpy Shark");
+    TextMarked("###cs_welcome_title", "Welcome to RadShark");
     ImGui::SetWindowFontScale(zoom_);
     host.PopFont();
     ImGui::Dummy(ImVec2(0, 10.0f * k));
@@ -788,7 +788,7 @@ void SharkView::DrawWelcome(const Services& host) {
     ImGui::Dummy(ImVec2(0, 16.0f * k));
     const DecoderStatus& d = cap_.Decoder();
     if (d.ready) {
-        ImGui::TextDisabled("You are running VSpy Shark with %s.", d.text.c_str());
+        ImGui::TextDisabled("You are running RadShark with %s.", d.text.c_str());
     } else {
         ImGui::PushStyleColor(ImGuiCol_Text, kStopRed);
         TextMarked("###cs_welcome_nodecoder", "The dissector is not available: " + d.text);
@@ -1291,10 +1291,10 @@ void SharkView::DrawFind() {
 }
 
 void SharkView::DrawAbout(const Services& host) {
-    if (show_about_) { ImGui::OpenPopup("About VSpy Shark###cs_about"); show_about_ = false; }
-    if (!ImGui::BeginPopupModal("About VSpy Shark###cs_about", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings)) return;
+    if (show_about_) { ImGui::OpenPopup("About RadShark###cs_about"); show_about_ = false; }
+    if (!ImGui::BeginPopupModal("About RadShark###cs_about", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings)) return;
     host.PushFont(Font::Bold);
-    ImGui::TextUnformatted("VSpy Shark");
+    ImGui::TextUnformatted("RadShark");
     host.PopFont();
     ImGui::TextUnformatted("An independent Ethernet analyzer with a FreeWili GUI plugin.");
     ImGui::TextUnformatted("Dissection: Wireshark's libwireshark, in the separate wirespy_server process (GPL-2.0-or-later).");
@@ -1332,4 +1332,4 @@ void SharkView::DrawFileProperties() {
     ImGui::EndPopup();
 }
 
-} // namespace vspyshark
+} // namespace radshark

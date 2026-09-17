@@ -7,7 +7,7 @@
 #include <cstdlib>
 #include <cstdio>
 
-namespace vspyshark {
+namespace radshark {
 double Services::SettingsGetNumber(const char* key,double fallback) const {
     std::string s(SettingsGet(key));
     if(s.empty()) return fallback;

@@ -18,7 +18,7 @@
 #include <string>
 #include <vector>
 
-namespace vspyshark {
+namespace radshark {
 
 // --- File --------------------------------------------------------------
 std::unique_ptr<FrameSource> OpenFileSource(const std::string& path, std::string& error);
@@ -36,4 +36,4 @@ bool IcsneoAvailable();
 std::vector<SourceEntry> ListIcsneoDevices(bool rescan);
 std::unique_ptr<FrameSource> OpenIcsneoDevice(const std::string& serial);
 
-} // namespace vspyshark
+} // namespace radshark

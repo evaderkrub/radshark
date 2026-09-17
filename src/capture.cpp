@@ -10,7 +10,7 @@
 #include <cstring>
 #include <set>
 
-namespace vspyshark {
+namespace radshark {
 
 namespace {
 constexpr std::size_t kPipeline = 128;   // decodes in flight per round trip
@@ -170,7 +170,7 @@ bool Capture::EnsureDecoder(std::string& error) {
         worker_ = std::thread([this] { WorkerMain(); });
     }
     status_.ready = true;
-    if (log_) log_(0, "vspyshark: " + status_.text);
+    if (log_) log_(0, "radshark: " + status_.text);
     return true;
 }
 
@@ -366,7 +366,7 @@ void Capture::Pump() {
         case Result::Disconnected:
             status_.ready = false;
             status_.text = "wirespy_server connection lost: " + r.error;
-            if (log_) log_(1, "vspyshark: " + status_.text);
+            if (log_) log_(1, "radshark: " + status_.text);
             break;
         }
     }
@@ -473,4 +473,4 @@ void Capture::WorkerMain() {
     }
 }
 
-} // namespace vspyshark
+} // namespace radshark

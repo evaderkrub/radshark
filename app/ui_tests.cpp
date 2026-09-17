@@ -14,7 +14,7 @@ bool Wait(ImGuiTestContext* ctx,const std::function<bool()>& predicate) {
     while(!predicate() && std::chrono::steady_clock::now()<end) ctx->Yield();
     return predicate();
 }
-void Ref(ImGuiTestContext* ctx) { ctx->SetRef(ImGui::FindWindowByName("VSpy Shark###SharkMain")->ID); }
+void Ref(ImGuiTestContext* ctx) { ctx->SetRef(ImGui::FindWindowByName("RadShark###SharkMain")->ID); }
 }
 void RegisterSharkTests(ImGuiTestEngine* engine,SharkUiTests& state) {
     auto* t=IM_REGISTER_TEST(engine,"shark","welcome");t->UserData=&state;
@@ -27,9 +27,9 @@ void RegisterSharkTests(ImGuiTestEngine* engine,SharkUiTests& state) {
         const auto sources=a.View().AllSources(a.Host(),false);
         bool local=false,device=false;
         for(const auto& e:sources) {
-            local|=e.kind==vspyshark::SourceKind::LocalInterface;
-            device|=e.kind==vspyshark::SourceKind::Icsneo;
-            IM_CHECK(e.kind!=vspyshark::SourceKind::Corelib && e.kind!=vspyshark::SourceKind::Libx);
+            local|=e.kind==radshark::SourceKind::LocalInterface;
+            device|=e.kind==radshark::SourceKind::Icsneo;
+            IM_CHECK(e.kind!=radshark::SourceKind::Corelib && e.kind!=radshark::SourceKind::Libx);
         }
         IM_CHECK(local); IM_CHECK(device);
         State(ctx).screenshot="shark-welcome.png";ctx->Yield(3);
@@ -50,7 +50,7 @@ void RegisterSharkTests(ImGuiTestEngine* engine,SharkUiTests& state) {
         IM_CHECK(!cap.Tree(6)->children.empty());
         State(ctx).screenshot="shark-packets.png";ctx->Yield(3);
         Ref(ctx);ctx->ItemInputValue("###cs_filter","tcp");ctx->KeyPress(ImGuiKey_Enter);
-        IM_CHECK(Wait(ctx,[&]{return cap.Filter()=="tcp" && cap.FilterStatus()==vspyshark::Capture::FilterState::Valid && cap.PendingCount()==0;}));
+        IM_CHECK(Wait(ctx,[&]{return cap.Filter()=="tcp" && cap.FilterStatus()==radshark::Capture::FilterState::Valid && cap.PendingCount()==0;}));
         IM_CHECK(cap.Displayed().size()>0 && cap.Displayed().size()<16);
         IM_CHECK(a.View().SaveAs("shark-export.pcapng",true,error));
         wirespy::PcapFile saved;IM_CHECK(wirespy::ReadPcap("shark-export.pcapng",saved));

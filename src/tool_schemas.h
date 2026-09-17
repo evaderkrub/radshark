@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Dave Robins
 
 #pragma once
-namespace vspyshark {
+namespace radshark {
 constexpr const char* kStateSchema = R"JSON({"type":"object","properties":{}})JSON";
 constexpr const char* kPacketsSchema = R"JSON({"type":"object","properties":{
   "first":{"type":"integer","description":"first row (0-based) of the displayed list"},

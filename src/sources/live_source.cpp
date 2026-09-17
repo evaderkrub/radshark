@@ -7,15 +7,15 @@
 // text from libpcap is shown as the reason, verbatim.
 #include "sources.h"
 
-#ifdef VSPYSHARK_HAVE_PCAP
+#ifdef RADSHARK_HAVE_PCAP
 #include <pcap.h>
 #include <atomic>
 #include <thread>
 #endif
 
-namespace vspyshark {
+namespace radshark {
 
-#ifdef VSPYSHARK_HAVE_PCAP
+#ifdef RADSHARK_HAVE_PCAP
 
 namespace {
 
@@ -167,4 +167,4 @@ std::unique_ptr<FrameSource> OpenLocalInterface(const std::string&, bool, const 
 
 #endif
 
-} // namespace vspyshark
+} // namespace radshark
